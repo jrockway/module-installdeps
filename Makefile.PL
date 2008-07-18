@@ -12,4 +12,6 @@ requires 'YAML::Tiny';
 build_requires 'Test::More';
 build_requires 'ok';
 
+install_script('bin/installdeps');
+
 WriteAll();
