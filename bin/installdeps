@@ -3,6 +3,22 @@ use strict;
 use warnings;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
-use Module::InstallDeps;
 
-Module::InstallDeps->new_with_options->run;
+use Module::InstallDeps;
+use Path::Class qw(dir);
+
+my $directory = dir(shift @ARGV)->absolute unless $ARGV[0] =~ /^--/;
+$directory ||= dir('.')->absolute;
+
+my $cpan = $ARGV[0] =~ /^--cpanp/ ? [qw/cpanp install/] : [qw/cpan/];
+
+if(grep { /^--?[h?](?:elp)?/ } @ARGV){
+    print <<"EOF";
+Usage: $0 [directory] [--cpan || --cpanplus]
+    Installs all dependencies of the module in 'directory'.  The  
+    current directory is assumed if 'directory' is omitted.
+EOF
+    exit 1;
+}
+
+Module::InstallDeps->new( cpan => $cpan, directory => $directory )->run;
