@@ -7,16 +7,22 @@ use lib "$Bin/../lib";
 use Module::InstallDeps;
 use Path::Class qw(dir);
 
-my $directory = dir(shift @ARGV)->absolute unless $ARGV[0] =~ /^--/;
+
+my $directory = dir(shift @ARGV)->absolute
+  if defined $ARGV[0] && $ARGV[0] !~ /^--(?:cpan|h(?:elp)?)/;
 $directory ||= dir('.')->absolute;
 
+$ARGV[0] ||= ''; # quiet a warning
 my $cpan = $ARGV[0] =~ /^--cpanp/ ? [qw/cpanp install/] : [qw/cpan/];
 
 if(grep { /^--?[h?](?:elp)?/ } @ARGV){
     print <<"EOF";
 Usage: $0 [directory] [--cpan || --cpanplus]
-    Installs all dependencies of the module in 'directory'.  The  
+    Installs all dependencies of the module in 'directory'.  The
     current directory is assumed if 'directory' is omitted.
+
+    Supplying the "--cpanplus" argument will force the use of
+    CPANPLUS instead of CPAN.
 EOF
     exit 1;
 }
