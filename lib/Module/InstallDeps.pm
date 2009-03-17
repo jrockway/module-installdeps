@@ -17,7 +17,7 @@ has 'directory' => (
 
 has 'cpan' => (
     is      => 'ro',
-    isa     => 'ArrayRef',
+    isa     => 'ArrayRef[Str]',
     default => sub { ['cpan'] }, # otherwise [qw/cpanp install/]
 );
 
@@ -70,7 +70,7 @@ sub _parse_meta {
 
 sub _extract_depends {
     my ($self) = @_;
-    return map { 
+    return map {
         my $type = ref $_;
         if($type eq 'ARRAY'){
             @$_;
@@ -95,7 +95,7 @@ sub _run_makefilepl {
         command => [$, 'Makefile.PL'],
         verbose => 1,
     );
-    
+
     return;
 }
 
